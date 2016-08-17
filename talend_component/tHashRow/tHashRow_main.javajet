@@ -1,0 +1,76 @@
+<%@ jet 
+	imports="
+		org.talend.core.model.process.INode 
+		org.talend.core.model.process.ElementParameterParser 
+		org.talend.core.model.process.IConnection
+		org.talend.core.model.process.IConnectionCategory
+		org.talend.core.model.utils.NodeUtil
+		org.talend.designer.codegen.config.CodeGeneratorArgument
+		org.talend.core.model.metadata.IMetadataColumn
+		org.talend.core.model.metadata.IMetadataTable
+		java.util.List
+		java.util.ArrayList
+    	java.util.Map
+	" 
+%>
+<%
+	CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+	INode node = (INode) codeGenArgument.getArgument();
+	String cid = node.getUniqueName();
+	String outputColumn = ElementParameterParser.getValue(node, "__OUTPUT_COLUMN__");
+	IConnection connIn = null;
+	List<String> inColumns = new ArrayList<String>(); // to check the out going columns for hand over the data
+	List<? extends IConnection> inConns = NodeUtil.getIncomingConnections(node, IConnectionCategory.DATA);
+	if (inConns.size() > 0) {
+		connIn = inConns.get(0);
+		IMetadataTable inMetadataTable = connIn.getMetadataTable();
+		for (IMetadataColumn column : inMetadataTable.getListColumns()) {
+			inColumns.add(column.getLabel());
+		}
+	}
+	IConnection connOut = null;
+	List<? extends IConnection> outConns = NodeUtil.getOutgoingConnections(node, IConnectionCategory.DATA);
+	if (outConns.size() > 0) {
+		connOut = outConns.get(0);
+	}
+	%>
+	<%=cid%>.reset();
+	<%=cid%>_nbLines++;
+	globalMap.put("<%=cid%>_NB_LINE", <%=cid%>_nbLines);
+<%	@SuppressWarnings("unchecked")
+	List<Map<String, String>> columnList = (List<Map<String,String>>) ElementParameterParser.getObjectValue(node, "__COLUMN_CONFIG__");
+	if (connIn != null && columnList != null) {
+		for (Map<String, String> ce : columnList) {
+			String columnName = ce.get("SCHEMA_COLUMN");
+			if (columnName.equals(outputColumn)) {
+				continue;
+			}
+			if (inColumns.contains(columnName) == false) {
+				continue;
+			}
+			boolean use = "true".equals(ce.get("USE"));
+			if (use) { %>
+	try {
+		<%=cid%>.add(<%=connIn.getName()%>.<%=columnName%>);
+	} catch (Exception e) {
+		globalMap.put("<%=cid%>_ERROR_MESSAGE","Convert to String and add column <%=columnName%> to checksum failed:" + e.getMessage());
+		throw e; 
+	}
+<%			}
+			if (connOut != null) { %>
+	<%=connOut.getName()%>.<%=columnName%> = <%=connIn.getName()%>.<%=columnName%>;		
+<%			}
+		} // for
+	}
+%>
+	try {
+		String hash = <%=cid%>.build();
+		globalMap.put("<%=cid%>_HASH", hash);
+<%		if (connOut != null && outputColumn != null && outputColumn.isEmpty() == false) { %>
+		<%=connOut.getName()%>.<%=outputColumn%> = hash;
+<%		} %>
+	} catch (Exception e) {
+		globalMap.put("<%=cid%>_ERROR_MESSAGE","Build hash failed:" + e.getMessage());
+		throw e;
+	}
+	
