@@ -67,11 +67,18 @@
 		>
 		</PARAMETER>
 
+		<PARAMETER 
+			NAME="ALLOW_NO_USED_FIELDS" 
+			FIELD="CHECK"
+			NUM_ROW="40"
+		>
+		</PARAMETER>
+
 	</PARAMETERS>
 	<ADVANCED_PARAMETERS />
 	<CODEGENERATION>
 		<IMPORTS>
-			<IMPORT NAME="cimt-talendcomp-checksum" MODULE="cimt-talendcomp-checksum-1.0.jar" REQUIRED="true" />
+			<IMPORT NAME="cimt-talendcomp-checksum" MODULE="cimt-talendcomp-checksum-1.1.jar" REQUIRED="true" />
 		</IMPORTS>
 	</CODEGENERATION>
 	<RETURNS>

@@ -19,6 +19,7 @@ public class HashBuilder {
 	private final SimpleDateFormat df;
 	private static Charset cs = null;
 	private final MessageDigest mDigest;
+	private boolean allowEmptyData = false;
 	
 	private HashBuilder(String hashMethod) throws NoSuchAlgorithmException {
 		nf = (DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
@@ -176,7 +177,11 @@ public class HashBuilder {
 	
     public String build() throws NoSuchAlgorithmException {
     	if (content.length() == 0) {
-    		throw new IllegalStateException("You must add some content to hash it!");
+    		if (allowEmptyData) {
+        		return null;
+    		} else {
+    			throw new IllegalStateException("Hash build failed. No values have been added to the hash builder. Check the configuration!");
+    		}
     	}
         final byte[] result = mDigest.digest(content.toString().getBytes(cs));
         final StringBuilder sb = new StringBuilder();
@@ -185,5 +190,13 @@ public class HashBuilder {
         }
         return sb.toString();
     }
+
+	public boolean isAllowEmptyData() {
+		return allowEmptyData;
+	}
+
+	public void setAllowEmptyData(boolean allowEmptyData) {
+		this.allowEmptyData = allowEmptyData;
+	}
 
 }
