@@ -175,6 +175,9 @@ public class HashBuilder {
 	}
 	
     public String build() throws NoSuchAlgorithmException {
+    	if (content.length() == 0) {
+    		throw new IllegalStateException("You must add some content to hash it!");
+    	}
         final byte[] result = mDigest.digest(content.toString().getBytes(cs));
         final StringBuilder sb = new StringBuilder();
         for (int i = 0; i < result.length; i++) {
