@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <COMPONENT>
+	
 	<HEADER 
 		AUTHOR="cimt AG" 
 		COMPATIBILITY="ALL"
@@ -13,16 +14,23 @@
 		VERSION="1.0">
 		<SIGNATURE />
 	</HEADER>
+	
 	<FAMILIES>
 	    <FAMILY>Processing/Fields</FAMILY>
 	</FAMILIES>
+	
 	<DOCUMENTATION>
 		<URL />
 	</DOCUMENTATION>
+	
 	<CONNECTORS>
 		<CONNECTOR CTYPE="FLOW" MIN_INPUT="1" MAX_INPUT="1" MAX_OUTPUT="1" />
 		<CONNECTOR CTYPE="ITERATE" MAX_OUTPUT="1" MAX_INPUT="0" />
+		<CONNECTOR CTYPE="COMPONENT_OK" />
+		<CONNECTOR CTYPE="COMPONENT_ERROR" />
+		<CONNECTOR CTYPE="RUN_IF" />
 	</CONNECTORS>
+	
 	<PARAMETERS>
 
 		<PARAMETER NAME="SCHEMA" FIELD="SCHEMA_TYPE" REQUIRED="true"
@@ -67,18 +75,11 @@
 		>
 		</PARAMETER>
 
-		<PARAMETER 
-			NAME="ALLOW_NO_USED_FIELDS" 
-			FIELD="CHECK"
-			NUM_ROW="40"
-		>
-		</PARAMETER>
-
 	</PARAMETERS>
 	<ADVANCED_PARAMETERS />
 	<CODEGENERATION>
 		<IMPORTS>
-			<IMPORT NAME="cimt-talendcomp-checksum" MODULE="cimt-talendcomp-checksum-1.1.jar" REQUIRED="true" />
+			<IMPORT NAME="cimt-talendcomp-checksum" MODULE="cimt-talendcomp-hash-1.1.jar" REQUIRED="true" />
 		</IMPORTS>
 	</CODEGENERATION>
 	<RETURNS>

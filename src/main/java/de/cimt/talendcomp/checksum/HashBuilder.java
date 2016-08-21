@@ -7,7 +7,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -16,15 +15,13 @@ public class HashBuilder {
 	private final StringBuilder content = new StringBuilder();
 	private boolean caseInsensitive = false;
 	private final DecimalFormat nf;
-	private final SimpleDateFormat df;
 	private static Charset cs = null;
 	private final MessageDigest mDigest;
-	private boolean allowEmptyData = false;
+	private boolean allNull = true;
 	
 	private HashBuilder(String hashMethod) throws NoSuchAlgorithmException {
 		nf = (DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
 		nf.setGroupingUsed(false);
-		df = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.ENGLISH);
 		if (cs == null) {
 			cs = Charset.forName("UTF-8");
 		}
@@ -45,6 +42,7 @@ public class HashBuilder {
 
 	public HashBuilder reset() {
 		content.setLength(0);
+		allNull = true;
 		return this;
 	}
 	
@@ -62,8 +60,9 @@ public class HashBuilder {
 			} else {
 				content.append(value.trim());
 			}
-			content.append("|");
+			allNull = false;
 		}
+		content.append("|");
 		return this;
 	}
 	
@@ -72,7 +71,9 @@ public class HashBuilder {
 			content.append("null");
 		} else {
 			content.append(nf.format(value));
+			allNull = false;
 		}
+		content.append("|");
 		return this;
 	}
 	
@@ -81,6 +82,7 @@ public class HashBuilder {
 			content.append("null");
 		} else {
 			content.append(nf.format(value));
+			allNull = false;
 		}
 		content.append("|");
 		return this;
@@ -91,6 +93,7 @@ public class HashBuilder {
 			content.append("null");
 		} else {
 			content.append(nf.format(value));
+			allNull = false;
 		}
 		content.append("|");
 		return this;
@@ -101,7 +104,9 @@ public class HashBuilder {
 			content.append("null");
 		} else {
 			content.append(nf.format(value));
+			allNull = false;
 		}
+		content.append("|");
 		return this;
 	}
 
@@ -110,6 +115,7 @@ public class HashBuilder {
 			content.append("null");
 		} else {
 			content.append(nf.format(value));
+			allNull = false;
 		}
 		content.append("|");
 		return this;
@@ -120,6 +126,7 @@ public class HashBuilder {
 			content.append("null");
 		} else {
 			content.append(nf.format(value));
+			allNull = false;
 		}
 		content.append("|");
 		return this;
@@ -130,6 +137,7 @@ public class HashBuilder {
 			content.append("null");
 		} else {
 			content.append(nf.format(value));
+			allNull = false;
 		}
 		content.append("|");
 		return this;
@@ -139,7 +147,8 @@ public class HashBuilder {
 		if (value == null) {
 			content.append("null");
 		} else {
-			content.append(df.format(value));
+			content.append(value.getTime());
+			allNull = false;
 		}
 		content.append("|");
 		return this;
@@ -150,6 +159,7 @@ public class HashBuilder {
 			content.append("null");
 		} else {
 			content.append(value);
+			allNull = false;
 		}
 		content.append("|");
 		return this;
@@ -160,6 +170,7 @@ public class HashBuilder {
 			content.append("null");
 		} else {
 			content.append(value);
+			allNull = false;
 		}
 		content.append("|");
 		return this;
@@ -170,6 +181,7 @@ public class HashBuilder {
 			content.append("null");
 		} else {
 			content.append(value);
+			allNull = false;
 		}
 		content.append("|");
 		return this;
@@ -177,11 +189,7 @@ public class HashBuilder {
 	
     public String build() throws NoSuchAlgorithmException {
     	if (content.length() == 0) {
-    		if (allowEmptyData) {
-        		return null;
-    		} else {
-    			throw new IllegalStateException("Hash build failed. No values have been added to the hash builder. Check the configuration!");
-    		}
+    		return null;
     	}
         final byte[] result = mDigest.digest(content.toString().getBytes(cs));
         final StringBuilder sb = new StringBuilder();
@@ -191,12 +199,8 @@ public class HashBuilder {
         return sb.toString();
     }
 
-	public boolean isAllowEmptyData() {
-		return allowEmptyData;
-	}
-
-	public void setAllowEmptyData(boolean allowEmptyData) {
-		this.allowEmptyData = allowEmptyData;
+	public boolean allValuesAreNull() {
+		return allNull;
 	}
 
 }

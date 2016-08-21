@@ -9,8 +9,8 @@
 		org.talend.core.model.metadata.IMetadataColumn
 		org.talend.core.model.metadata.IMetadataTable
 		java.util.List
-		java.util.ArrayList
     	java.util.Map
+    	java.util.HashMap
 	" 
 %>
 <%
@@ -19,13 +19,13 @@
 	String cid = node.getUniqueName();
 	String outputColumn = ElementParameterParser.getValue(node, "__OUTPUT_COLUMN__");
 	IConnection connIn = null;
-	List<String> inColumns = new ArrayList<String>(); // to check the out going columns for hand over the data
+	Map<String, IMetadataColumn> inColumns = new HashMap<String, IMetadataColumn>(); // to check the out going columns for hand over the data
 	List<? extends IConnection> inConns = NodeUtil.getIncomingConnections(node, IConnectionCategory.DATA);
 	if (inConns.size() > 0) {
 		connIn = inConns.get(0);
 		IMetadataTable inMetadataTable = connIn.getMetadataTable();
 		for (IMetadataColumn column : inMetadataTable.getListColumns()) {
-			inColumns.add(column.getLabel());
+			inColumns.put(column.getLabel(), column);
 		}
 	}
 	IConnection connOut = null;
@@ -45,7 +45,8 @@
 			if (columnName.equals(outputColumn)) {
 				continue;
 			}
-			if (inColumns.contains(columnName) == false) {
+			IMetadataColumn column = inColumns.get(columnName);
+			if (column == null) {
 				continue;
 			}
 			boolean use = "true".equals(ce.get("USE"));
@@ -64,7 +65,10 @@
 	}
 %>
 	try {
-		String hash = <%=cid%>.build();
+		String hash = null;
+		if (<%=cid%>.allValuesAreNull() == false) {
+			hash = <%=cid%>.build();
+		}
 		globalMap.put("<%=cid%>_HASH", hash);
 <%		if (connOut != null && outputColumn != null && outputColumn.isEmpty() == false) { %>
 		<%=connOut.getName()%>.<%=outputColumn%> = hash;
