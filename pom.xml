@@ -1,28 +1,47 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<organization>
+		<name>cimt AG</name>
+	</organization>
+	<groupId>de.cimt.talendcomp</groupId>
+	<artifactId>cimt-talendcomp-hash</artifactId>
+	<version>1.1</version>
+	<packaging>jar</packaging>
 
-  <groupId>de.cimt.talendcomp</groupId>
-  <artifactId>cimt-talendcomp-hash</artifactId>
-  <version>1.1</version>
-  <packaging>jar</packaging>
+	<name>talendcomp_tHash</name>
+	<url>http://cimt-ag.de</url>
 
-  <name>talendcomp_tHash</name>
-  <url>http://cimt-ag.de</url>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-  <organization>
-  	<name>cimt AG</name>
-  </organization>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>de.cimt.talendcomp</groupId>
+				<artifactId>cimt-talendcomp-maven-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>tHashRow</id>
+						<goals>
+							<goal>component</goal>
+						</goals>
+						<configuration>
+							<componentName>tHashRow</componentName>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
