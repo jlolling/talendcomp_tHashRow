@@ -1,3 +1,18 @@
+/**
+ * Copyright 2015 Jan Lolling jan.lolling@gmail.com
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.cimt.talendcomp.checksum;
 
 import java.math.BigDecimal;
@@ -18,6 +33,7 @@ public class HashBuilder {
 	private static Charset cs = null;
 	private final MessageDigest mDigest;
 	private boolean allNull = true;
+	private String nullReplacement = "null";
 	
 	private HashBuilder(String hashMethod) throws NoSuchAlgorithmException {
 		nf = (DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
@@ -53,7 +69,7 @@ public class HashBuilder {
 
 	public HashBuilder add(final String value) {
 		if (value == null) {
-			content.append("null");
+			content.append(nullReplacement);
 		} else {
 			if (caseInsensitive) {
 				content.append(value.trim().toLowerCase(Locale.ENGLISH));
@@ -68,7 +84,7 @@ public class HashBuilder {
 	
 	public HashBuilder add(final Integer value) {
 		if (value == null) {
-			content.append("null");
+			content.append(nullReplacement);
 		} else {
 			content.append(nf.format(value));
 			allNull = false;
@@ -79,7 +95,7 @@ public class HashBuilder {
 	
 	public HashBuilder add(final Long value) {
 		if (value == null) {
-			content.append("null");
+			content.append(nullReplacement);
 		} else {
 			content.append(nf.format(value));
 			allNull = false;
@@ -90,7 +106,7 @@ public class HashBuilder {
 
 	public HashBuilder add(final Short value) {
 		if (value == null) {
-			content.append("null");
+			content.append(nullReplacement);
 		} else {
 			content.append(nf.format(value));
 			allNull = false;
@@ -101,7 +117,7 @@ public class HashBuilder {
 
 	public HashBuilder add(final Float value) {
 		if (value == null) {
-			content.append("null");
+			content.append(nullReplacement);
 		} else {
 			content.append(nf.format(value));
 			allNull = false;
@@ -112,7 +128,7 @@ public class HashBuilder {
 
 	public HashBuilder add(final Double value) {
 		if (value == null) {
-			content.append("null");
+			content.append(nullReplacement);
 		} else {
 			content.append(nf.format(value));
 			allNull = false;
@@ -123,7 +139,7 @@ public class HashBuilder {
 
 	public HashBuilder add(final BigDecimal value) {
 		if (value == null) {
-			content.append("null");
+			content.append(nullReplacement);
 		} else {
 			content.append(nf.format(value));
 			allNull = false;
@@ -134,7 +150,7 @@ public class HashBuilder {
 
 	public HashBuilder add(final BigInteger value) {
 		if (value == null) {
-			content.append("null");
+			content.append(nullReplacement);
 		} else {
 			content.append(nf.format(value));
 			allNull = false;
@@ -145,7 +161,7 @@ public class HashBuilder {
 
 	public HashBuilder add(final Date value) {
 		if (value == null) {
-			content.append("null");
+			content.append(nullReplacement);
 		} else {
 			content.append(value.getTime());
 			allNull = false;
@@ -156,7 +172,7 @@ public class HashBuilder {
 
 	public HashBuilder add(final Boolean value) {
 		if (value == null) {
-			content.append("null");
+			content.append(nullReplacement);
 		} else {
 			content.append(value);
 			allNull = false;
@@ -167,7 +183,7 @@ public class HashBuilder {
 
 	public HashBuilder add(final byte[] value) {
 		if (value == null) {
-			content.append("null");
+			content.append(nullReplacement);
 		} else {
 			content.append(value);
 			allNull = false;
@@ -178,7 +194,7 @@ public class HashBuilder {
 
 	public HashBuilder add(final Byte value) {
 		if (value == null) {
-			content.append("null");
+			content.append(nullReplacement);
 		} else {
 			content.append(value);
 			allNull = false;
@@ -201,6 +217,18 @@ public class HashBuilder {
 
 	public boolean allValuesAreNull() {
 		return allNull;
+	}
+
+	public String getNullReplacement() {
+		return nullReplacement;
+	}
+
+	public void setNullReplacement(String nullReplacement) {
+		if (nullReplacement != null) {
+			this.nullReplacement = nullReplacement;
+		} else {
+			this.nullReplacement = "null";
+		}
 	}
 
 }

@@ -1,14 +1,29 @@
+/**
+ * Copyright 2015 Jan Lolling jan.lolling@gmail.com
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.cimt.talendcomp.checksum;
 
-import java.util.Date;
+import static org.junit.Assert.assertEquals;
 
-import static org.junit.Assert.*;
+import java.util.Date;
 
 import org.junit.Test;
 
 /**
  * Unit test for HashBuilder.
- * @author Jan Lolling <jan.lolling@cimt-ag.de>
+ * @author Jan Lolling <jan.lolling@gmail.com>
  */
 public class HashBuilderTest {
 
@@ -33,7 +48,7 @@ public class HashBuilderTest {
     	hb.add("äöüß/\n\r\b");
     	String actual = hb.build();
     	System.out.println("Value test sha-1: " + actual);
-    	String expected = "41b360a6a39edff84b94ff7640316c55";
+    	String expected = "efafff817a2a56bad871f282fcbc19b1";
     	assertEquals(expected, actual);
     }
 
@@ -58,7 +73,7 @@ public class HashBuilderTest {
     	hb.add("äöüß/\n\r\b");
     	String actual = hb.build();
     	System.out.println("Values test sha-1: " + actual);
-    	String expected = "458bbe30ac4536646f495ff7fc0ee945f72f0b74";
+    	String expected = "1e9b3a956e4f8b0331314b2a4a12561cef1582db";
     	assertEquals(expected, actual);
     }
 

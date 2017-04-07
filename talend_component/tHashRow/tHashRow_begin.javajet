@@ -11,6 +11,10 @@
 	String cid = node.getUniqueName();
 	String hashType = ElementParameterParser.getValue(node, "__HASH_TYPE__");
 	boolean caseInsensitive = "true".equals(ElementParameterParser.getValue(node, "__CASE_INSENSITIVE__"));
+	String nullReplacement = ElementParameterParser.getValue(node, "__NULL_REPLACEMENT__");
+	if (nullReplacement == null || nullReplacement.trim().isEmpty()) {
+		nullReplacement = "null";
+	}
 %>
 <% if ("MD5".equals(hashType)) { %>
 	de.cimt.talendcomp.checksum.HashBuilder <%=cid%> = de.cimt.talendcomp.checksum.HashBuilder.getMD5HashBuilder();
@@ -21,6 +25,8 @@
 <% } %>
 <% if (caseInsensitive) { %>
 	<%=cid%>.caseInsensitive();
+	// if the null replacement is null, internally the String "null" will be used
+	<%=cid%>.setNullReplacement(<%=nullReplacement%>);
 <% } %>
 	globalMap.put("<%=cid%>", <%=cid%>);
 	int <%=cid%>_nbLines = 0;
