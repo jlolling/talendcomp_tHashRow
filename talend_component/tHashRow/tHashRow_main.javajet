@@ -17,7 +17,11 @@
 	CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
 	INode node = (INode) codeGenArgument.getArgument();
 	String cid = node.getUniqueName();
+	String hashType = ElementParameterParser.getValue(node, "__HASH_TYPE__");
 	String outputColumn = ElementParameterParser.getValue(node, "__OUTPUT_COLUMN__");
+	boolean exposeHashBase = ("true").equals(ElementParameterParser.getValue(node,"__EXPOSE_HASH_BASE__"));
+	String hashBaseOutputColumn = ElementParameterParser.getValue(node, "__HASH_BASE_OUTPUT_COLUMN__");
+	
 	IConnection connIn = null;
 	Map<String, IMetadataColumn> inColumns = new HashMap<String, IMetadataColumn>(); // to check the out going columns for hand over the data
 	List<? extends IConnection> inConns = NodeUtil.getIncomingConnections(node, IConnectionCategory.DATA);
@@ -34,45 +38,68 @@
 		connOut = outConns.get(0);
 	}
 	%>
-	<%=cid%>.reset();
+	
+	<%=cid%>_hn.reset();
 	<%=cid%>_nbLines++;
 	globalMap.put("<%=cid%>_NB_LINE", <%=cid%>_nbLines);
 <%	@SuppressWarnings("unchecked")
 	List<Map<String, String>> columnList = (List<Map<String,String>>) ElementParameterParser.getObjectValue(node, "__COLUMN_CONFIG__");
 	if (connIn != null && columnList != null) {
+
+		boolean use = false;
+		boolean itemTrimming = false;
+		String itemCaseSensetive = "";
+
 		for (Map<String, String> ce : columnList) {
 			String columnName = ce.get("SCHEMA_COLUMN");
+
+		
+			use = "true".equalsIgnoreCase(ce.get("USE"));
+			itemTrimming = "true".equals(ce.get("TRIM"));
+			itemCaseSensetive = ce.get("CASE_SENSITIVE");		
+
 			if (columnName.equals(outputColumn)) {
 				continue;
 			}
+			
 			IMetadataColumn column = inColumns.get(columnName);
 			if (column == null) {
 				continue;
 			}
-			boolean use = "true".equals(ce.get("USE"));
-			if (use) { %>
-	try {
-		<%=cid%>.add(<%=connIn.getName()%>.<%=columnName%>);
-	} catch (Exception e) {
-		globalMap.put("<%=cid%>_ERROR_MESSAGE","Convert to String and add column <%=columnName%> to checksum failed:" + e.getMessage());
-		throw e; 
-	}
-<%			}
+						
+			if (use) {
+%>
+				de.cimt.talendcomp.checksum.NormalizeObjectConfig <%=cid%>_itemConfig_<%=columnName%> = new de.cimt.talendcomp.checksum.NormalizeObjectConfig("<%=itemCaseSensetive%>", <%=itemTrimming%>);
+				try {
+					<%=cid%>_hn.add(<%=connIn.getName()%>.<%=columnName%>, <%=cid%>_itemConfig_<%=columnName%>);
+				} catch (Exception e) {
+					globalMap.put("<%=cid%>_ERROR_MESSAGE","Convert to String and add column <%=columnName%> to checksum failed:" + e.getMessage());
+					throw e; 
+				}
+
+<%			} // END if(use)
+			
 			if (connOut != null) { %>
-	<%=connOut.getName()%>.<%=columnName%> = <%=connIn.getName()%>.<%=columnName%>;		
+				<%=connOut.getName()%>.<%=columnName%> = <%=connIn.getName()%>.<%=columnName%>;		
 <%			}
-		} // for
+
+		} // END for
 	}
 %>
 	try {
 		String hash = null;
-		if (<%=cid%>.allValuesAreNull() == false) {
-			hash = <%=cid%>.build();
-		}
-		globalMap.put("<%=cid%>_HASH", hash);
-<%		if (connOut != null && outputColumn != null && outputColumn.isEmpty() == false) { %>
-		<%=connOut.getName()%>.<%=outputColumn%> = hash;
-<%		} %>
+		hash = <%=cid%>_hn.calculateHash("<%=hashType%>");
+		
+<%			if (connOut != null && outputColumn != null && outputColumn.isEmpty() == false) { %>
+				<%=connOut.getName()%>.<%=outputColumn%> = hash;
+				globalMap.put("<%=cid%>_HASH", hash);
+<%			} %>
+
+
+<%			if (exposeHashBase){ %>
+				<%=connOut.getName()%>.<%=hashBaseOutputColumn%> = <%=cid%>_hn.getNormalizedString();
+<%			} %>
+
 	} catch (Exception e) {
 		globalMap.put("<%=cid%>_ERROR_MESSAGE","Build hash failed:" + e.getMessage());
 		throw e;

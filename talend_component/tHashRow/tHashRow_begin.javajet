@@ -9,24 +9,27 @@
 	CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
 	INode node = (INode) codeGenArgument.getArgument();
 	String cid = node.getUniqueName();
-	String hashType = ElementParameterParser.getValue(node, "__HASH_TYPE__");
-	boolean caseInsensitive = "true".equals(ElementParameterParser.getValue(node, "__CASE_INSENSITIVE__"));
+	String delimiter = ElementParameterParser.getValue(node, "__DELIMITER__");
 	String nullReplacement = ElementParameterParser.getValue(node, "__NULL_REPLACEMENT__");
 	if (nullReplacement == null || nullReplacement.trim().isEmpty()) {
-		nullReplacement = "null";
+		nullReplacement = "";
 	}
+	String fractionSizeFloat = ElementParameterParser.getValue(node, "__FRACTION_SIZE_FLOAT__");
+	String fractionSizeDouble = ElementParameterParser.getValue(node, "__FRACTION_SIZE_DOUBLE__");
+	String numberFormat = ElementParameterParser.getValue(node, "__NUMBER_FORMAT__");
+	String dateFormat = ElementParameterParser.getValue(node, "__DATE_FORMAT__");
+	boolean enableQuoting =  ("true").equals(ElementParameterParser.getValue(node,"__ENABLE_STRING_QUOTING__"));
+	String quoteCharacter = ElementParameterParser.getValue(node, "__QUOTE_CHARACTER__");
+	boolean modifyHashOutput =  ("true").equals(ElementParameterParser.getValue(node,"__MODIFY_HASH_OUTPUT_IF_NULL__"));
+	String hashOutputIfBaseIsNull = ElementParameterParser.getValue(node, "__HASH_VALUE_IF_NULL__");
+	if (hashOutputIfBaseIsNull == null || hashOutputIfBaseIsNull.trim().isEmpty()) {
+		hashOutputIfBaseIsNull = "";
+	}
+	boolean dateInMillis =  ("true").equals(ElementParameterParser.getValue(node,"__ENABLE_DATE_AS_MILLIS__"));
+	boolean cutOffEmptyTrailingObjects =  ("true").equals(ElementParameterParser.getValue(node,"__CUT_OFF_TRAILING_OBJECTS__"));
 %>
-<% if ("MD5".equals(hashType)) { %>
-	de.cimt.talendcomp.checksum.HashBuilder <%=cid%> = de.cimt.talendcomp.checksum.HashBuilder.getMD5HashBuilder();
-<% } else if ("SHA1".equals(hashType)) { %>
-	de.cimt.talendcomp.checksum.HashBuilder <%=cid%> = de.cimt.talendcomp.checksum.HashBuilder.getSHA1HashBuilder();
-<% } else if ("SHA256".equals(hashType)) { %>
-	de.cimt.talendcomp.checksum.HashBuilder <%=cid%> = de.cimt.talendcomp.checksum.HashBuilder.getSHA256HashBuilder();
-<% } %>
-<% if (caseInsensitive) { %>
-	<%=cid%>.caseInsensitive();
-	// if the null replacement is null, internally the String "null" will be used
-	<%=cid%>.setNullReplacement(<%=nullReplacement%>);
-<% } %>
-	globalMap.put("<%=cid%>", <%=cid%>);
+
+	de.cimt.talendcomp.checksum.NormalizeConfig <%=cid%>_config = new de.cimt.talendcomp.checksum.NormalizeConfig(<%=delimiter%>, <%=nullReplacement%>, <%=enableQuoting%>, <%=quoteCharacter%>, <%=dateFormat%>, "<%=numberFormat%>", <%=fractionSizeFloat%>, <%=fractionSizeDouble%>, <%=modifyHashOutput%>, <%=hashOutputIfBaseIsNull%>, <%=dateInMillis%>, <%=cutOffEmptyTrailingObjects%>);
+	de.cimt.talendcomp.checksum.HashNormalization <%=cid%>_hn = new de.cimt.talendcomp.checksum.HashNormalization(<%=cid%>_config);
+	globalMap.put("<%=cid%>_config", <%=cid%>_config);
 	int <%=cid%>_nbLines = 0;
