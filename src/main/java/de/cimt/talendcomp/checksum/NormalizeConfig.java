@@ -14,14 +14,16 @@ public class NormalizeConfig {
 	private String quotationCharacter;
 	private boolean quotingEnabled;
 	private String dateFormat;
+	private boolean dateInMillis;
 	private Locale numberFormat;
 	private int maxFractionFloat;
 	private int maxFractionDouble;
 	private boolean modifyHashOutput;
 	private String hashOutputIfBaseIsNull;
+	private boolean cutOffEmptyTrailingObjects;
 	
 	public NormalizeConfig(String delimter, String nullReplacement, boolean quotingEnabled, String quoteCharacter, String dateFormat, String numberFormat,
-			int maxFractionFloat, int maxFractionDouble, boolean modifyHashOutput, String hashOutputIfBaseIsNull) {
+			int maxFractionFloat, int maxFractionDouble, boolean modifyHashOutput, String hashOutputIfBaseIsNull, boolean dateInMillis, boolean cutOffEmptyTrailingObjects) {
 		
 		// check nulls and throw exception
 		
@@ -29,17 +31,17 @@ public class NormalizeConfig {
 			throw new IllegalArgumentException("delimiter must not be null");
 		
 		if(nullReplacement == null)
-			throw new IllegalArgumentException("nullReplacement must not be null");
+			throw new IllegalArgumentException("nullReplacement must not be null. At least empty string.");
 		
 		if(quoteCharacter == null)
 			throw new IllegalArgumentException("quoteCharacter must not be null");
+		
 		
 		if(dateFormat == null)
 			throw new IllegalArgumentException("dateFormat must not be null");
 		
 		if(numberFormat == null)
 			throw new IllegalArgumentException("numberFormat must not be null");
-		
 		
 		// set variables
 		
@@ -52,6 +54,8 @@ public class NormalizeConfig {
 		this.maxFractionDouble = maxFractionDouble;
 		this.modifyHashOutput =  modifyHashOutput;
 		this.hashOutputIfBaseIsNull = hashOutputIfBaseIsNull;
+		this.dateInMillis = dateInMillis;
+		this.cutOffEmptyTrailingObjects = cutOffEmptyTrailingObjects;
 		
 		if("ENGLISH".equalsIgnoreCase(numberFormat)){
 			this.numberFormat = Locale.ENGLISH;
@@ -210,7 +214,30 @@ public class NormalizeConfig {
 	public void setHashOutputIfBaseIsNull(String hashOutputIfBaseIsNull) {
 		this.hashOutputIfBaseIsNull = hashOutputIfBaseIsNull;
 	}
-	
+
+
+
+	public boolean isDateInMillis() {
+		return dateInMillis;
+	}
+
+
+
+	public void setDateInMillis(boolean dateInMillis) {
+		this.dateInMillis = dateInMillis;
+	}
+
+
+
+	public boolean isCutOffEmptyTrailingObjects() {
+		return cutOffEmptyTrailingObjects;
+	}
+
+
+
+	public void setCutOffEmptyTrailingObjects(boolean cutOffEmptyTrailingObejcts) {
+		this.cutOffEmptyTrailingObjects = cutOffEmptyTrailingObejcts;
+	}
 	
 			
 }

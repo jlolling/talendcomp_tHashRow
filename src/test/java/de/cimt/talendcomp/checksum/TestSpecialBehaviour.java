@@ -17,7 +17,7 @@ public class TestSpecialBehaviour {
 	@Test
 	public void testModifyOutput1(){
 		
-		config = new NormalizeConfig(";", "", true, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, true, "###");		
+		config = new NormalizeConfig(";", "", true, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, true, HASH_OUTPUT_REPLACEMENT,false, false);		
 		md5Base = new HashNormalization(config);
 		itemConfig = new NormalizeObjectConfig("UPPER_CASE", true);
 		
@@ -27,7 +27,7 @@ public class TestSpecialBehaviour {
 		md5Base.add(null, itemConfig);
 		
 		result = md5Base.calculateHash("MD5");	
-		assertEquals("###", result);
+		assertEquals(HASH_OUTPUT_REPLACEMENT, result);
 		
 	}
 	
@@ -37,7 +37,7 @@ public class TestSpecialBehaviour {
 	@Test
 	public void testModifyOutput2(){
 		
-		config = new NormalizeConfig(";", "", false, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, true, HASH_OUTPUT_REPLACEMENT);		
+		config = new NormalizeConfig(";", "", false, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, true, HASH_OUTPUT_REPLACEMENT, false, false);		
 		md5Base = new HashNormalization(config);
 		itemConfig = new NormalizeObjectConfig("UPPER_CASE", true);
 		
@@ -57,7 +57,29 @@ public class TestSpecialBehaviour {
 	@Test
 	public void testModifyOutputAllNull(){
 		
-		config = new NormalizeConfig(";", "", false, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, true, HASH_OUTPUT_REPLACEMENT);		
+		config = new NormalizeConfig(";", "", false, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, true, HASH_OUTPUT_REPLACEMENT, false, false);		
+		md5Base = new HashNormalization(config);
+		itemConfig = new NormalizeObjectConfig("UPPER_CASE", true);
+		
+		String result;
+		
+		md5Base.reset();
+		md5Base.add(null, itemConfig);
+		md5Base.add(null, itemConfig);
+		md5Base.add(null, itemConfig);
+		
+		result = md5Base.calculateHash("MD5");	
+		assertEquals(HASH_OUTPUT_REPLACEMENT, result);
+		
+	}
+	
+	/**
+	 * Test "" with modified output and quotation disabled
+	 */
+	@Test
+	public void testModifyOutputAllNullWithCutOf(){
+		
+		config = new NormalizeConfig(";", "", false, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, true, HASH_OUTPUT_REPLACEMENT, false, true);		
 		md5Base = new HashNormalization(config);
 		itemConfig = new NormalizeObjectConfig("UPPER_CASE", true);
 		
@@ -79,7 +101,7 @@ public class TestSpecialBehaviour {
 	@Test
 	public void testModifyOutputNotAllNull(){
 		
-		config = new NormalizeConfig(";", "", false, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, true, HASH_OUTPUT_REPLACEMENT);		
+		config = new NormalizeConfig(";", "", false, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, true, HASH_OUTPUT_REPLACEMENT, false, false);		
 		md5Base = new HashNormalization(config);
 		itemConfig = new NormalizeObjectConfig("UPPER_CASE", true);
 		

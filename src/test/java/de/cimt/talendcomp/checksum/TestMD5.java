@@ -2,6 +2,9 @@ package de.cimt.talendcomp.checksum;
 
 import static org.junit.Assert.*;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +17,7 @@ public class TestMD5 {
 	
 	@Before
 	public void setup() {
-		config = new NormalizeConfig(";", "", true, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 1, false, null);		
+		config = new NormalizeConfig(";", "", true, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 1, false, null, false, false);		
 		md5Base = new HashNormalization(config);
 		itemConfig = new NormalizeObjectConfig("UPPER_CASE", true);
 	}
@@ -52,6 +55,28 @@ public class TestMD5 {
         
         result = md5Base.calculateHash("MD5");
         assertEquals(MD5_TEST_123, result);
+        
+        md5Base.reset();
+        config.setDateInMillis(false);
+        Calendar calendar = GregorianCalendar.getInstance();
+    	calendar.clear();
+    	calendar.set(2017, 00, 01, 12, 5, 30);
+    	md5Base.add("Test", itemConfig);
+        md5Base.add(calendar.getTime(), itemConfig);
+    	
+        result = md5Base.calculateHash("MD5");
+        assertEquals(MD5_TEST_DATE, result);
+        
+        md5Base.reset();
+        config.setDateInMillis(true);
+        calendar = GregorianCalendar.getInstance();
+    	calendar.clear();
+    	calendar.set(2017, 00, 01, 12, 5, 30);
+    	md5Base.add("Test", itemConfig);
+        md5Base.add(calendar.getTime(), itemConfig);
+    	
+        result = md5Base.calculateHash("MD5");
+        assertEquals(MD5_TEST_DATE_AS_MIILS, result);
     }
 
     @Test
@@ -158,5 +183,15 @@ public class TestMD5 {
      * The MD5 hash for the string <code>"";""</code> (including quotation marks).
      */
     private static final String MD5_TWO_EMPTY_STRINGS = "9a3f6d9b3e70fbe3a0934365d3048b04";
+    
+    /**
+     * The MD5 hash for the string <code>"TEST";2017-01-01T12:05:30.000</code> (including quotation marks).
+     */
+    private static final String MD5_TEST_DATE = "9b7bcdfa69aa3b0227949d881effa86c";
+    
+    /**
+     * The MD5 hash for the string <code>"TEST";1483268730000</code> (including quotation marks).
+     */
+    private static final String MD5_TEST_DATE_AS_MIILS = "04c562d29e75ff3d0461cfd44da11c0a";
     
 }

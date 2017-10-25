@@ -25,9 +25,11 @@
 	if (hashOutputIfBaseIsNull == null || hashOutputIfBaseIsNull.trim().isEmpty()) {
 		hashOutputIfBaseIsNull = "";
 	}
+	boolean dateInMillis =  ("true").equals(ElementParameterParser.getValue(node,"__ENABLE_DATE_AS_MILLIS__"));
+	boolean cutOffEmptyTrailingObjects =  ("true").equals(ElementParameterParser.getValue(node,"__CUT_OFF_TRAILING_OBJECTS__"));
 %>
 
-	de.cimt.talendcomp.checksum.NormalizeConfig <%=cid%>_config = new de.cimt.talendcomp.checksum.NormalizeConfig(<%=delimiter%>, <%=nullReplacement%>, <%=enableQuoting%>, <%=quoteCharacter%>, <%=dateFormat%>, "<%=numberFormat%>", <%=fractionSizeFloat%>, <%=fractionSizeDouble%>, <%=modifyHashOutput%>, <%=hashOutputIfBaseIsNull%>);
+	de.cimt.talendcomp.checksum.NormalizeConfig <%=cid%>_config = new de.cimt.talendcomp.checksum.NormalizeConfig(<%=delimiter%>, <%=nullReplacement%>, <%=enableQuoting%>, <%=quoteCharacter%>, <%=dateFormat%>, "<%=numberFormat%>", <%=fractionSizeFloat%>, <%=fractionSizeDouble%>, <%=modifyHashOutput%>, <%=hashOutputIfBaseIsNull%>, <%=dateInMillis%>, <%=cutOffEmptyTrailingObjects%>);
 	de.cimt.talendcomp.checksum.HashNormalization <%=cid%>_hn = new de.cimt.talendcomp.checksum.HashNormalization(<%=cid%>_config);
 	globalMap.put("<%=cid%>_config", <%=cid%>_config);
 	int <%=cid%>_nbLines = 0;

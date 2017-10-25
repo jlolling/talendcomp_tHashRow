@@ -47,13 +47,13 @@ public class HashNormalization {
     		throw new IllegalArgumentException("context has to be MD5, SHA1 or SHA-256");
     	
     	if("MD5".equalsIgnoreCase(context))
-    		return HashCalculation.getMD5Hash(sb.toString());
+    		return HashCalculation.getMD5Hash(this.getNormalizedString());
     	
     	if("SHA1".equalsIgnoreCase(context))
-    		return HashCalculation.getSHA1Hash(sb.toString());
+    		return HashCalculation.getSHA1Hash(this.getNormalizedString());
     	
     	if("SHA-256".equalsIgnoreCase(context))
-    		return HashCalculation.getSHA256Hash(sb.toString());
+    		return HashCalculation.getSHA256Hash(this.getNormalizedString());
 
     	return null;
     	
@@ -81,9 +81,45 @@ public class HashNormalization {
 	 * @return
 	 */
 	public String getNormalizedString(){
-		return sb.toString();
-	}
 		
+		String normalizedString = sb.toString();
+		
+		if(config.isCutOffEmptyTrailingObjects()){
+			
+			boolean endsWithDelimter = normalizedString.endsWith(config.getDelimter());
+			boolean endsWithEmptyQuotation = false;
+			
+			String emptyTrailingQuotation = config.getQuotationCharacter() + config.getQuotationCharacter();
+			
+			if(config.isQuotingEnabled()){
+				endsWithEmptyQuotation = normalizedString.endsWith(emptyTrailingQuotation);
+			}
+			
+			while(endsWithDelimter || endsWithEmptyQuotation){
+				
+				if(endsWithDelimter)
+					normalizedString = normalizedString.substring(0, normalizedString.length() - config.getDelimter().length());
+				
+				if(endsWithEmptyQuotation)
+					normalizedString = normalizedString.substring(0, normalizedString.length() - emptyTrailingQuotation.length());
+				
+				endsWithDelimter = normalizedString.endsWith(config.getDelimter()); 
+				
+				if(config.isQuotingEnabled()){
+					endsWithEmptyQuotation = normalizedString.endsWith(emptyTrailingQuotation);
+				}
+				
+			}
+			
+			return normalizedString;
+			
+		}else{
+			return sb.toString();
+		}
+		
+	}
+
+	
 	/**
 	 * Returns normalized string of this object
 	 * @param object
@@ -219,8 +255,12 @@ public class HashNormalization {
 			return config.getNullReplacement();
 		}
 		
-		SimpleDateFormat sdf = new SimpleDateFormat(config.getDateFormat());
-		return sdf.format(value);
+		if(config.isDateInMillis()){
+			return String.valueOf(value.getTime());
+		}else{
+			SimpleDateFormat sdf = new SimpleDateFormat(config.getDateFormat());
+			return sdf.format(value);
+		}
 	}
 
 	private String normalizeNumber(final Number value, final NumberFormat nf) {
@@ -235,4 +275,5 @@ public class HashNormalization {
         return normalized;
 	}
 
+	
 }

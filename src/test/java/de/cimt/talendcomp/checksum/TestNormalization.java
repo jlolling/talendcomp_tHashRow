@@ -16,7 +16,7 @@ public class TestNormalization {
 	
 	@Before
 	public void setup() {
-		config = new NormalizeConfig(";", "", true, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, false, null);		
+		config = new NormalizeConfig(";", "", true, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, false, null, false, false);		
 		md5Base = new HashNormalization(config);
 		itemConfig = new NormalizeObjectConfig("UPPER_CASE", true);
 	}
@@ -288,6 +288,9 @@ public class TestNormalization {
     
     @Test
     public void testDate() {
+    	
+    	config.setDateInMillis(false);
+    	
     	Calendar calendar = GregorianCalendar.getInstance();
     	// Clear all fields, especially milliseconds
     	calendar.clear();
@@ -301,33 +304,122 @@ public class TestNormalization {
 		assertEquals("2017-06-18T13:42:05.000", md5Base.normalize(calendar.getTime()));
 	}
     
-
-    
-//    @Ignore
     @Test
-    public void testMassiveUse() {
+    public void testDateInMillis(){
     	
-        itemConfig.setCaseSensitive(NormalizeObjectConfig.CaseSensitive.CASE_SENSITIVE);
-    	itemConfig.setTrimming(true);
+    	config.setDateInMillis(true);
     	
     	Calendar calendar = GregorianCalendar.getInstance();
     	// Clear all fields, especially milliseconds
     	calendar.clear();
     	
     	// 2017-01-01T12:05:30 (month in calendar is zero-based)
-    	calendar.set(2017, 00, 01, 12, 5, 30);
+    	calendar.set(2017, 00, 01, 12, 00, 00);
+		assertEquals("1483268400000", md5Base.normalize(calendar.getTime()));
     	
-    	for (int i = 0; i < 100000; i++) {
-    		
-    		md5Base.reset();
-    		md5Base.add("Test",itemConfig);
-    		md5Base.add(i,itemConfig);
-    		md5Base.add(calendar.getTime(),itemConfig);
-    		md5Base.add("Lorem ipsum dolor sit amet",itemConfig);
-    		
-    		assertEquals("\"Test\";" + i + ";2017-01-01T12:05:30.000;\"Lorem ipsum dolor sit amet\"",md5Base.getNormalizedString());
-		}
-		
-	}
+    }
+
+    
+    @Test
+    public void testCutOffEmptyTrailingWithQuotation(){
+    	
+    	config.setCutOffEmptyTrailingObjects(true);
+    	config.setQuotingEnabled(true);
+    	
+    	md5Base.reset();
+    	md5Base.add("Test", itemConfig);
+    	md5Base.add("", itemConfig);
+    	assertEquals("\"TEST\"", md5Base.getNormalizedString());
+    	
+    	md5Base.reset();
+    	md5Base.add("Test", itemConfig);
+    	md5Base.add("", itemConfig);
+    	md5Base.add("", itemConfig);
+    	assertEquals("\"TEST\"", md5Base.getNormalizedString());
+
+    	md5Base.reset();
+    	md5Base.add("Test", itemConfig);
+    	md5Base.add(null, itemConfig);
+    	md5Base.add("", itemConfig);
+    	assertEquals("\"TEST\"", md5Base.getNormalizedString());
+    	
+    	md5Base.reset();
+    	md5Base.add("Test", itemConfig);
+    	md5Base.add("", itemConfig);
+    	md5Base.add(null, itemConfig);
+    	assertEquals("\"TEST\"", md5Base.getNormalizedString());
+    	
+    	config.setCutOffEmptyTrailingObjects(false);
+    	md5Base.reset();
+    	md5Base.add("Test", itemConfig);
+    	md5Base.add("", itemConfig);
+    	md5Base.add("", itemConfig);
+    	assertEquals("\"TEST\";\"\";\"\"", md5Base.getNormalizedString());
+    }
+    
+    @Test
+    public void testCutOffEmptyTrailingWithOutQuotation(){
+    	
+    	config.setCutOffEmptyTrailingObjects(true);
+    	config.setQuotingEnabled(false);
+
+    	md5Base.reset();
+    	md5Base.add("Test", itemConfig);
+    	md5Base.add("", itemConfig);
+    	assertEquals("TEST", md5Base.getNormalizedString());
+    	
+    	md5Base.reset();
+    	md5Base.add("Test", itemConfig);
+    	md5Base.add("", itemConfig);
+    	md5Base.add("", itemConfig);
+    	assertEquals("TEST", md5Base.getNormalizedString());
+
+    	md5Base.reset();
+    	md5Base.add("Test", itemConfig);
+    	md5Base.add(null, itemConfig);
+    	md5Base.add("", itemConfig);
+    	assertEquals("TEST", md5Base.getNormalizedString());
+    	
+    	md5Base.reset();
+    	md5Base.add("Test", itemConfig);
+    	md5Base.add("", itemConfig);
+    	md5Base.add(null, itemConfig);
+    	assertEquals("TEST", md5Base.getNormalizedString());
+    	
+    	config.setCutOffEmptyTrailingObjects(false);
+    	md5Base.reset();
+    	md5Base.add("Test", itemConfig);
+    	md5Base.add("", itemConfig);
+    	md5Base.add("", itemConfig);
+    	
+    	assertEquals("TEST;;", md5Base.getNormalizedString());
+    }
+    
+//    @Ignore
+//    @Test
+//    public void testMassiveUse() {
+//    	
+//        itemConfig.setCaseSensitive(NormalizeObjectConfig.CaseSensitive.CASE_SENSITIVE);
+//    	itemConfig.setTrimming(true);
+//    	
+//    	Calendar calendar = GregorianCalendar.getInstance();
+//    	// Clear all fields, especially milliseconds
+//    	calendar.clear();
+//    	
+//    	// 2017-01-01T12:05:30 (month in calendar is zero-based)
+//    	calendar.set(2017, 00, 01, 12, 5, 30);
+//    	
+//    	for (int i = 0; i < 100000; i++) {
+//    		
+//    		md5Base.reset();
+//    		md5Base.add("Test",itemConfig);
+//    		md5Base.add(i,itemConfig);
+//    		md5Base.add(calendar.getTime(),itemConfig);
+//    		md5Base.add("Lorem ipsum dolor sit amet",itemConfig);
+//    		
+//    		assertEquals("\"Test\";" + i + ";2017-01-01T12:05:30.000;\"Lorem ipsum dolor sit amet\"",md5Base.getNormalizedString());
+//		}
+//		
+//	}
 	
 }
