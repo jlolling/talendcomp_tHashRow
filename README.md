@@ -1,5 +1,5 @@
 # Talend component tHashRow
-This component creates a hash value. All configured input columns will be concateneded with the given delimiter. The resulting string will be used to calculate the hash value. Every configured hash input manipulation will be applied, before the hash is calculated and populated to the selected output column.
+This component creates a hash value. All configured input columns will be cleansed according to the given rules and concateneded in the order of the schema with the given delimiter. The resulting string is used to calculate the hash value. Every configured hash input manipulation will be applied, before the hash is calculated and populated to the selected output column.
 
 # Basic Settings
 
