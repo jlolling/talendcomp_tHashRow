@@ -8,6 +8,8 @@ import java.util.GregorianCalendar;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.cimt.talendcomp.checksum.HashCalculation.HASH_OUTPUT_ENCODINGS;
+
 
 public class TestMD5 {
 
@@ -32,28 +34,28 @@ public class TestMD5 {
         md5Base.add("test", itemConfig);
         md5Base.add("123", itemConfig);
         
-        result = md5Base.calculateHash("MD5");
+        result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);
         assertEquals(MD5_TEST_123_STR, result);
 
         md5Base.reset();
         md5Base.add("test", itemConfig);
         md5Base.add(123, itemConfig);
     
-        result = md5Base.calculateHash("MD5");
+        result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);
         assertEquals(MD5_TEST_123, result);
 
         md5Base.reset();
         md5Base.add("test", itemConfig);
         md5Base.add(123L, itemConfig);
         
-        result = md5Base.calculateHash("MD5");
+        result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);
         assertEquals(MD5_TEST_123, result);
 
         md5Base.reset();
         md5Base.add("test", itemConfig);
         md5Base.add(123f, itemConfig);
         
-        result = md5Base.calculateHash("MD5");
+        result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);
         assertEquals(MD5_TEST_123, result);
         
         md5Base.reset();
@@ -64,7 +66,7 @@ public class TestMD5 {
     	md5Base.add("Test", itemConfig);
         md5Base.add(calendar.getTime(), itemConfig);
     	
-        result = md5Base.calculateHash("MD5");
+        result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);
         assertEquals(MD5_TEST_DATE, result);
         
         md5Base.reset();
@@ -75,7 +77,7 @@ public class TestMD5 {
     	md5Base.add("Test", itemConfig);
         md5Base.add(calendar.getTime(), itemConfig);
     	
-        result = md5Base.calculateHash("MD5");
+        result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);
         assertEquals(MD5_TEST_DATE_AS_MIILS, result);
     }
 
@@ -87,7 +89,7 @@ public class TestMD5 {
     	md5Base.reset();
         md5Base.add("test", itemConfig);
         
-    	String result = md5Base.calculateHash("MD5");
+    	String result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);
         assertEquals(MD5_TEST_LOWER_CASE, result);
     }
 
@@ -99,7 +101,7 @@ public class TestMD5 {
     	md5Base.reset();
         md5Base.add("test", itemConfig);
         
-    	String result = md5Base.calculateHash("MD5");
+    	String result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);
         assertEquals(MD5_TEST_UPPER_CASE, result);
     }
 
@@ -109,7 +111,7 @@ public class TestMD5 {
     	md5Base.reset();
         md5Base.add(null, itemConfig);
         
-        String result = md5Base.calculateHash("MD5");
+        String result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);
         assertEquals(MD5_EMPTY, result);
     }
 
@@ -120,7 +122,7 @@ public class TestMD5 {
         md5Base.add(null, itemConfig);
         md5Base.add(null, itemConfig);
         
-    	String result = md5Base.calculateHash("MD5");
+    	String result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);
         assertEquals(MD5_SEMICOLON, result);
     }
 
@@ -129,7 +131,7 @@ public class TestMD5 {
     	md5Base.reset();
     	md5Base.add("", itemConfig);
     	
-    	String result = md5Base.calculateHash("MD5");
+    	String result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);
         assertEquals(MD5_SINGLE_EMPTY_STRING, result);
     }
     
@@ -140,7 +142,7 @@ public class TestMD5 {
         md5Base.add("", itemConfig);
         md5Base.add("", itemConfig);
         
-    	String result = md5Base.calculateHash("MD5");
+    	String result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);
         assertEquals(MD5_TWO_EMPTY_STRINGS, result);
     }
     
