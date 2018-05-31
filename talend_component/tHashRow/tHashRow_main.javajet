@@ -13,15 +13,29 @@
     	java.util.HashMap
 	" 
 %>
+
+
 <%
 	CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
 	INode node = (INode) codeGenArgument.getArgument();
 	String cid = node.getUniqueName();
 	String hashType = ElementParameterParser.getValue(node, "__HASH_TYPE__");
+	String hashOutputEncoding = ElementParameterParser.getValue(node, "__HASH_OUTPUT_ENCODING__");
 	String outputColumn = ElementParameterParser.getValue(node, "__OUTPUT_COLUMN__");
 	boolean exposeHashBase = ("true").equals(ElementParameterParser.getValue(node,"__EXPOSE_HASH_BASE__"));
 	String hashBaseOutputColumn = ElementParameterParser.getValue(node, "__HASH_BASE_OUTPUT_COLUMN__");
-	
+
+%>
+
+	// determine hash output encoding - default HEX
+	de.cimt.talendcomp.checksum.HashCalculation.HASH_OUTPUT_ENCODINGS <%=cid%>_encoding =null;
+
+<%	if ("BASE64".equals(hashOutputEncoding)){ %>
+		 <%=cid%>_encoding = de.cimt.talendcomp.checksum.HashCalculation.HASH_OUTPUT_ENCODINGS.BASE64;
+<%	}else{ %>
+	 	 <%=cid%>_encoding = de.cimt.talendcomp.checksum.HashCalculation.HASH_OUTPUT_ENCODINGS.HEX;
+<%	} 
+
 	IConnection connIn = null;
 	Map<String, IMetadataColumn> inColumns = new HashMap<String, IMetadataColumn>(); // to check the out going columns for hand over the data
 	List<? extends IConnection> inConns = NodeUtil.getIncomingConnections(node, IConnectionCategory.DATA);
@@ -37,7 +51,7 @@
 	if (outConns.size() > 0) {
 		connOut = outConns.get(0);
 	}
-	%>
+%>
 	
 	<%=cid%>_hn.reset();
 	<%=cid%>_nbLines++;
@@ -88,7 +102,7 @@
 %>
 	try {
 		String hash = null;
-		hash = <%=cid%>_hn.calculateHash("<%=hashType%>");
+		hash = <%=cid%>_hn.calculateHash("<%=hashType%>", <%=cid%>_encoding);
 		
 <%			if (connOut != null && outputColumn != null && outputColumn.isEmpty() == false) { %>
 				<%=connOut.getName()%>.<%=outputColumn%> = hash;

@@ -32,28 +32,29 @@ public class HashNormalization {
 	
     /**
      * Calculates hash value based on added objects
-     * @param context MD5 / SHA1 / SHA-256
+     * @param algorithm -> MD5 / SHA1 / SHA-256
+     * @param hashOutputEncoding -> BASE64, HEX
      * @return
      * @throws IllegalArgumentException
      */
-    public String calculateHash(String context) throws IllegalArgumentException {
+    public String calculateHash(String algorithm, HashCalculation.HASH_OUTPUT_ENCODINGS hashOutputEncoding) throws IllegalArgumentException {
     	
     	if(sb.toString().isEmpty() || allNull){
     		if(config.isModifyHashOutput())
     			return config.getHashOutputIfBaseIsNull();
     	}
     				
-    	if(!"MD5".equalsIgnoreCase(context) && !"SHA1".equalsIgnoreCase(context) && !"SHA-256".equalsIgnoreCase(context))
-    		throw new IllegalArgumentException("context has to be MD5, SHA1 or SHA-256");
+    	if(!"MD5".equalsIgnoreCase(algorithm) && !"SHA1".equalsIgnoreCase(algorithm) && !"SHA-256".equalsIgnoreCase(algorithm))
+    		throw new IllegalArgumentException("algorithm has to be MD5, SHA1 or SHA-256");
     	
-    	if("MD5".equalsIgnoreCase(context))
-    		return HashCalculation.getMD5Hash(this.getNormalizedString());
+    	if("MD5".equalsIgnoreCase(algorithm))
+    		return HashCalculation.getMD5Hash(this.getNormalizedString(), hashOutputEncoding);
     	
-    	if("SHA1".equalsIgnoreCase(context))
-    		return HashCalculation.getSHA1Hash(this.getNormalizedString());
+    	if("SHA1".equalsIgnoreCase(algorithm))
+    		return HashCalculation.getSHA1Hash(this.getNormalizedString(), hashOutputEncoding);
     	
-    	if("SHA-256".equalsIgnoreCase(context))
-    		return HashCalculation.getSHA256Hash(this.getNormalizedString());
+    	if("SHA-256".equalsIgnoreCase(algorithm))
+    		return HashCalculation.getSHA256Hash(this.getNormalizedString(), hashOutputEncoding);
 
     	return null;
     	

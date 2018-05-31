@@ -3,6 +3,9 @@ package de.cimt.talendcomp.checksum;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import de.cimt.talendcomp.checksum.HashCalculation.HASH_OUTPUT_ENCODINGS;
+
 import static org.hamcrest.CoreMatchers.*;
 
 public class TestSpecialBehaviour {
@@ -26,7 +29,7 @@ public class TestSpecialBehaviour {
 		md5Base.reset();
 		md5Base.add(null, itemConfig);
 		
-		result = md5Base.calculateHash("MD5");	
+		result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);	
 		assertEquals(HASH_OUTPUT_REPLACEMENT, result);
 		
 	}
@@ -46,7 +49,7 @@ public class TestSpecialBehaviour {
 		md5Base.reset();
 		md5Base.add("", itemConfig);
 		
-		result = md5Base.calculateHash("MD5");	
+		result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);	
 		assertEquals(HASH_OUTPUT_REPLACEMENT, result);
 		
 	}
@@ -68,7 +71,7 @@ public class TestSpecialBehaviour {
 		md5Base.add(null, itemConfig);
 		md5Base.add(null, itemConfig);
 		
-		result = md5Base.calculateHash("MD5");	
+		result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);	
 		assertEquals(HASH_OUTPUT_REPLACEMENT, result);
 		
 	}
@@ -90,7 +93,7 @@ public class TestSpecialBehaviour {
 		md5Base.add(null, itemConfig);
 		md5Base.add(null, itemConfig);
 		
-		result = md5Base.calculateHash("MD5");	
+		result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);	
 		assertEquals(HASH_OUTPUT_REPLACEMENT, result);
 		
 	}
@@ -112,7 +115,7 @@ public class TestSpecialBehaviour {
 		md5Base.add("Test", itemConfig);
 		md5Base.add(null, itemConfig);
 		
-		result = md5Base.calculateHash("MD5");	
+		result = md5Base.calculateHash("MD5", HASH_OUTPUT_ENCODINGS.HEX);	
 		assertThat(result, is(not(HASH_OUTPUT_REPLACEMENT)));
 		assertEquals("6e618343fec0d14c498ecd6b1a2c5c41",result);
 	}
