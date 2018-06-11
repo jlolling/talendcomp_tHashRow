@@ -6,14 +6,14 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class HashNormalization {
+public class Normalization {
 	
 	private NormalizeConfig config;
 	private StringBuilder sb = new StringBuilder();
 	private boolean firstCall = true;
 	private boolean allNull = true;
 	
-	public HashNormalization(NormalizeConfig config) {
+	public Normalization(NormalizeConfig config) {
 		if (config == null)
 			throw new IllegalArgumentException("config variable cannot be null");
 		
@@ -68,11 +68,19 @@ public class HashNormalization {
 	public void add(Object object, NormalizeObjectConfig itemConfig){
 		
 		if (firstCall){
-			sb.append(normalize(object, itemConfig));
+			
+			if(object != null) 
+				sb.append(normalize(object, itemConfig));
+			
 			firstCall = false;
+			
 		}else{
+		
 			sb.append(config.getDelimter());
-			sb.append(normalize(object, itemConfig));
+			
+			if(object != null) 
+				sb.append(normalize(object, itemConfig));
+		
 		}
 		
 	}
@@ -82,6 +90,9 @@ public class HashNormalization {
 	 * @return
 	 */
 	public String getNormalizedString(){
+		
+		if(sb.length() == 0)
+			return null;
 		
 		String normalizedString = sb.toString();
 		
