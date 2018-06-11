@@ -11,7 +11,16 @@ public class Normalization {
 	private NormalizeConfig config;
 	private StringBuilder sb = new StringBuilder();
 	private boolean firstCall = true;
-	private boolean allNull = true;
+	/**
+	 * Tracks if all input values are null, regardless if {@link NormalizeConfig#nullReplacement nullReplacement} is set.
+	 */
+	private boolean allInputsAreNull = true;
+	
+	/**
+	 * Tracks if any input value isn't null. It takes care of {@link NormalizeConfig#nullReplacement nullReplacement}.
+	 * If nullReplacment is not null and only one null value is added, than hashBaseHasValues is true!
+	 */
+	private boolean hashBaseHasValues = false;
 	
 	public Normalization(NormalizeConfig config) {
 		if (config == null)
@@ -26,7 +35,8 @@ public class Normalization {
 	 */
 	public void reset(){
 		firstCall=true;
-		allNull=true;
+		allInputsAreNull=true;
+		hashBaseHasValues=false;
 		sb.setLength(0);
 	}
 	
@@ -39,7 +49,7 @@ public class Normalization {
      */
     public String calculateHash(String algorithm, HashCalculation.HASH_OUTPUT_ENCODINGS hashOutputEncoding) throws IllegalArgumentException {
     	
-    	if(sb.toString().isEmpty() || allNull){
+    	if(sb.toString().isEmpty() || allInputsAreNull){
     		if(config.isModifyHashOutput())
     			return config.getHashOutputIfBaseIsNull();
     	}
@@ -69,8 +79,11 @@ public class Normalization {
 		
 		if (firstCall){
 			
-			if(object != null) 
+			if(object != null || config.getNullReplacement() != null) {
+				hashBaseHasValues=true;
 				sb.append(normalize(object, itemConfig));
+			}
+				
 			
 			firstCall = false;
 			
@@ -78,9 +91,10 @@ public class Normalization {
 		
 			sb.append(config.getDelimter());
 			
-			if(object != null) 
+			if(object != null) {
 				sb.append(normalize(object, itemConfig));
-		
+				hashBaseHasValues=true;
+			}
 		}
 		
 	}
@@ -91,7 +105,7 @@ public class Normalization {
 	 */
 	public String getNormalizedString(){
 		
-		if(sb.length() == 0)
+		if(!hashBaseHasValues)
 			return null;
 		
 		String normalizedString = sb.toString();
@@ -142,7 +156,7 @@ public class Normalization {
 		if (object == null)
 			return config.getNullReplacement();
 		
-		allNull = false;
+		allInputsAreNull = false;
 		
 		if (object instanceof String)
             return normalize((String) object, itemConfig);

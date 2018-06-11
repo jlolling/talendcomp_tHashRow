@@ -268,6 +268,7 @@ public class TestNormalization {
     	md5Base.add(null, itemConfig);
     	
     	assertEquals(";", md5Base.getNormalizedString());
+    	
     }
     
 
@@ -287,7 +288,7 @@ public class TestNormalization {
 		normBase.add(null, normItemConfig);
 		normBase.add(null, normItemConfig);
 		
-		assertEquals(";", normBase.getNormalizedString());
+		assertEquals(null, normBase.getNormalizedString());
 	}
 	
     
