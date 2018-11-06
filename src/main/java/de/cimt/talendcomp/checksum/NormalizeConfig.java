@@ -29,13 +29,15 @@ public class NormalizeConfig {
 		
 		if(delimter == null)
 			throw new IllegalArgumentException("delimiter must not be null");
+	
+//		not necessary in all cases
+//		if(nullReplacement == null)
+//			throw new IllegalArgumentException("nullReplacement must not be null. At least empty string.");
 		
-		if(nullReplacement == null)
-			throw new IllegalArgumentException("nullReplacement must not be null. At least empty string.");
-		
-		if(quoteCharacter == null)
-			throw new IllegalArgumentException("quoteCharacter must not be null");
-		
+		if(quotingEnabled) {
+			if(quoteCharacter == null)
+				throw new IllegalArgumentException("quoteCharacter must not be null");
+		}
 		
 		if(dateFormat == null)
 			throw new IllegalArgumentException("dateFormat must not be null");

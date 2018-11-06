@@ -1,7 +1,6 @@
 package de.cimt.talendcomp.checksum;
 
 import static org.junit.Assert.assertEquals;
-
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -10,14 +9,14 @@ import org.junit.Test;
 
 public class TestNormalization {
 
-	private HashNormalization md5Base;
+	private Normalization md5Base;
 	private NormalizeObjectConfig itemConfig;
 	private NormalizeConfig config;
 	
 	@Before
 	public void setup() {
 		config = new NormalizeConfig(";", "", true, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, false, null, false, false);		
-		md5Base = new HashNormalization(config);
+		md5Base = new Normalization(config);
 		itemConfig = new NormalizeObjectConfig("UPPER_CASE", true);
 	}
 
@@ -269,7 +268,29 @@ public class TestNormalization {
     	md5Base.add(null, itemConfig);
     	
     	assertEquals(";", md5Base.getNormalizedString());
+    	
     }
+    
+
+	@Test
+	public void testNullWithoutNullReplacement() {
+		
+		NormalizeConfig normConfig = new NormalizeConfig(";", null, false, null, "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, true, null, false, false);		
+		Normalization normBase = new Normalization(normConfig);
+		NormalizeObjectConfig normItemConfig = new NormalizeObjectConfig("UPPER_CASE", true);
+		
+		normBase.reset();
+		normBase.add(null, normItemConfig);
+		
+		assertEquals(null, normBase.getNormalizedString());
+		
+		normBase.reset();
+		normBase.add(null, normItemConfig);
+		normBase.add(null, normItemConfig);
+		
+		assertEquals(null, normBase.getNormalizedString());
+	}
+	
     
     @Test
     public void testCaseSensitiveNormalization() throws IllegalArgumentException {

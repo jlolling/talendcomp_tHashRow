@@ -31,9 +31,11 @@ public class HashCalculation {
 
     private static String digest(String digestAlgorithm, String content, HASH_OUTPUT_ENCODINGS hashOutputEncoding) {
     	
+    	if(content == null)
+    		return null;
+    	
     	// argument checks
     	Objects.requireNonNull(digestAlgorithm, "digestAlgorithm must not be null");
-    	Objects.requireNonNull(content, "content must not be null");
     	Objects.requireNonNull(hashOutputEncoding, "encoding must not be null");
     	
     	// calculate hash

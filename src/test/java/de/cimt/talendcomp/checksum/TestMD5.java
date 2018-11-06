@@ -13,14 +13,14 @@ import de.cimt.talendcomp.checksum.HashCalculation.HASH_OUTPUT_ENCODINGS;
 
 public class TestMD5 {
 
-	private HashNormalization md5Base;
+	private Normalization md5Base;
 	private NormalizeObjectConfig itemConfig;
 	private NormalizeConfig config;
 	
 	@Before
 	public void setup() {
 		config = new NormalizeConfig(";", "", true, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 1, false, null, false, false);		
-		md5Base = new HashNormalization(config);
+		md5Base = new Normalization(config);
 		itemConfig = new NormalizeObjectConfig("UPPER_CASE", true);
 	}
 	

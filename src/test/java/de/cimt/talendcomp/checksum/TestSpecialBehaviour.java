@@ -10,7 +10,7 @@ import static org.hamcrest.CoreMatchers.*;
 
 public class TestSpecialBehaviour {
 
-	private HashNormalization md5Base;
+	private Normalization md5Base;
 	private NormalizeObjectConfig itemConfig;
 	private NormalizeConfig config;
    
@@ -21,7 +21,7 @@ public class TestSpecialBehaviour {
 	public void testModifyOutput1(){
 		
 		config = new NormalizeConfig(";", "", true, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, true, HASH_OUTPUT_REPLACEMENT,false, false);		
-		md5Base = new HashNormalization(config);
+		md5Base = new Normalization(config);
 		itemConfig = new NormalizeObjectConfig("UPPER_CASE", true);
 		
 		String result;
@@ -41,7 +41,7 @@ public class TestSpecialBehaviour {
 	public void testModifyOutput2(){
 		
 		config = new NormalizeConfig(";", "", false, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, true, HASH_OUTPUT_REPLACEMENT, false, false);		
-		md5Base = new HashNormalization(config);
+		md5Base = new Normalization(config);
 		itemConfig = new NormalizeObjectConfig("UPPER_CASE", true);
 		
 		String result;
@@ -61,7 +61,7 @@ public class TestSpecialBehaviour {
 	public void testModifyOutputAllNull(){
 		
 		config = new NormalizeConfig(";", "", false, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, true, HASH_OUTPUT_REPLACEMENT, false, false);		
-		md5Base = new HashNormalization(config);
+		md5Base = new Normalization(config);
 		itemConfig = new NormalizeObjectConfig("UPPER_CASE", true);
 		
 		String result;
@@ -83,7 +83,7 @@ public class TestSpecialBehaviour {
 	public void testModifyOutputAllNullWithCutOf(){
 		
 		config = new NormalizeConfig(";", "", false, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, true, HASH_OUTPUT_REPLACEMENT, false, true);		
-		md5Base = new HashNormalization(config);
+		md5Base = new Normalization(config);
 		itemConfig = new NormalizeObjectConfig("UPPER_CASE", true);
 		
 		String result;
@@ -105,7 +105,7 @@ public class TestSpecialBehaviour {
 	public void testModifyOutputNotAllNull(){
 		
 		config = new NormalizeConfig(";", "", false, "\"", "yyyy-MM-dd'T'HH:mm:ss.SSS", "ENGLISH", 7, 15, true, HASH_OUTPUT_REPLACEMENT, false, false);		
-		md5Base = new HashNormalization(config);
+		md5Base = new Normalization(config);
 		itemConfig = new NormalizeObjectConfig("UPPER_CASE", true);
 		
 		String result;
@@ -119,6 +119,7 @@ public class TestSpecialBehaviour {
 		assertThat(result, is(not(HASH_OUTPUT_REPLACEMENT)));
 		assertEquals("6e618343fec0d14c498ecd6b1a2c5c41",result);
 	}
+	
 	
 	/**
 	 * Hashoutput replacement
