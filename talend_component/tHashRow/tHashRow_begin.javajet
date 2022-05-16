@@ -30,6 +30,6 @@
 %>
 
 	de.cimt.talendcomp.checksum.NormalizeConfig <%=cid%>_config = new de.cimt.talendcomp.checksum.NormalizeConfig(<%=delimiter%>, <%=nullReplacement%>, <%=enableQuoting%>, <%=quoteCharacter%>, <%=dateFormat%>, "<%=numberFormat%>", <%=fractionSizeFloat%>, <%=fractionSizeDouble%>, <%=modifyHashOutput%>, <%=hashOutputIfBaseIsNull%>, <%=dateInMillis%>, <%=cutOffEmptyTrailingObjects%>);
-	de.cimt.talendcomp.checksum.HashNormalization <%=cid%>_hn = new de.cimt.talendcomp.checksum.HashNormalization(<%=cid%>_config);
+	de.cimt.talendcomp.checksum.Normalization <%=cid%>_hn = new de.cimt.talendcomp.checksum.Normalization(<%=cid%>_config);
 	globalMap.put("<%=cid%>_config", <%=cid%>_config);
 	int <%=cid%>_nbLines = 0;
