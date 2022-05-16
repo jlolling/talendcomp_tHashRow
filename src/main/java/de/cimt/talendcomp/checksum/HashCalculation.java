@@ -9,6 +9,8 @@ import java.util.Objects;
 
 public class HashCalculation {
 	
+	private static String contentEncoding = "UTF-8"; 
+	
 	/**
 	 * supported encoding methods in which the hash value will be represented
 	 */
@@ -46,7 +48,7 @@ public class HashCalculation {
 			throw new RuntimeException("Digest Algorithm " + digestAlgorithm + " could not be found in this environment.", e);
 		}
     	
-		final byte[] result = messageDigest.digest(content.getBytes(Charset.forName("UTF-8")));
+		final byte[] result = messageDigest.digest(content.getBytes(Charset.forName(contentEncoding)));
 		
 		// convert hash to requested encoding
 		if(hashOutputEncoding.equals(HASH_OUTPUT_ENCODINGS.BASE64)) {
